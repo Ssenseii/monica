@@ -16,13 +16,13 @@ A simple, keyboard-driven interactive CLI application that makes FFmpeg easy to 
 
 ## Supported Operations
 
-| Category | Description |
-|----------|-------------|
-| **Convert Video** | MP4, MKV, WebM, AVI with various codecs (H.264, H.265, VP9) |
-| **Convert Audio** | MP3, AAC, FLAC, WAV, OGG, Opus |
-| **Extract Audio** | Extract audio tracks from video files |
+| Category            | Description                                                       |
+| ------------------- | ----------------------------------------------------------------- |
+| **Convert Video**   | MP4, MKV, WebM, AVI with various codecs (H.264, H.265, VP9)       |
+| **Convert Audio**   | MP3, AAC, FLAC, WAV, OGG, Opus                                    |
+| **Extract Audio**   | Extract audio tracks from video files                             |
 | **Resize/Compress** | Scale to 1080p, 720p, 480p, 360p or compress with quality presets |
-| **Remux** | Change container format without re-encoding |
+| **Remux**           | Change container format without re-encoding                       |
 
 ## Installation
 
@@ -80,10 +80,6 @@ On first run, MONICA will check for FFmpeg and offer to download it automaticall
 6. Choose a preset (e.g., "MP4 (H.264)")
 7. Select files to process using Space, then press Enter
 8. Converted files appear in the `/export` folder
-
-### Quick Access (Optional)
-
-You can create an alias or wrapper script to run MONICA from any directory without manually activating the virtual environment. See the project's installation script or create a wrapper that activates the venv automatically.
 
 ### Output Naming
 
