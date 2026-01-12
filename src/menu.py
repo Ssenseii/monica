@@ -1,5 +1,8 @@
 """Interactive menu system for MONICA."""
 
+import os
+import platform
+import subprocess
 from pathlib import Path
 import questionary
 from colorama import Fore, Style
@@ -23,6 +26,8 @@ MAIN_MENU_OPTIONS = [
     ("Remux (no re-encode)", "remux"),
     ("YouTube", "youtube"),
     ("Short-form content", "shortform"),
+    ("Open import folder", "open_import"),
+    ("Open export folder", "open_export"),
     ("Logs / status", "status"),
     ("Help", "help"),
     ("Exit", "exit"),
@@ -578,6 +583,32 @@ def handle_status(base_dir: Path, logs_dir: Path) -> None:
     print()
 
 
+def open_folder(folder_path: Path) -> None:
+    """Open a folder in the system file manager.
+    
+    Args:
+        folder_path: Path to the folder to open
+    """
+    # Ensure the folder exists
+    folder_path.mkdir(parents=True, exist_ok=True)
+    
+    system = platform.system().lower()
+    
+    try:
+        if system == "darwin":  # macOS
+            subprocess.run(["open", str(folder_path)], check=True)
+        elif system == "windows":
+            subprocess.run(["explorer", str(folder_path)], check=True)
+        else:  # Linux and others
+            subprocess.run(["xdg-open", str(folder_path)], check=True)
+        
+        print(f"{Fore.GREEN}Opened folder: {folder_path}{Style.RESET_ALL}")
+    except subprocess.CalledProcessError as e:
+        print(f"{Fore.RED}Failed to open folder: {e}{Style.RESET_ALL}")
+    except FileNotFoundError:
+        print(f"{Fore.RED}File manager not found. Please open manually: {folder_path}{Style.RESET_ALL}")
+
+
 def handle_help() -> None:
     """Display help menu with submenus for different topics."""
     while True:
@@ -654,6 +685,16 @@ def run_menu_loop(
 
         elif action == "help":
             handle_help()
+
+        elif action == "open_import":
+            open_folder(import_dir)
+            print()
+            questionary.press_any_key_to_continue("Press any key to continue...").ask()
+
+        elif action == "open_export":
+            open_folder(export_dir)
+            print()
+            questionary.press_any_key_to_continue("Press any key to continue...").ask()
 
         elif action in ("video", "audio", "extract", "resize", "remux", "youtube", "shortform"):
             handle_conversion(action, ffmpeg_path, import_dir, export_dir)

@@ -16,7 +16,12 @@ from .logger import log_info, log_error, log_warning
 # FFmpeg download URLs
 FFMPEG_URLS = {
     "windows": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip",
-    "linux": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"
+    "linux": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz",
+    # macOS: static builds from evermeet.cx (need to download ffmpeg and ffprobe separately)
+    "darwin": {
+        "ffmpeg": "https://evermeet.cx/ffmpeg/ffmpeg-7.1.zip",
+        "ffprobe": "https://evermeet.cx/ffmpeg/ffprobe-7.1.zip"
+    }
 }
 
 
@@ -27,6 +32,8 @@ def get_os() -> str:
         return "windows"
     elif system == "linux":
         return "linux"
+    elif system == "darwin":  # macOS
+        return "darwin"
     else:
         return "unknown"
 
@@ -59,6 +66,109 @@ def get_ffmpeg_path(base_dir: Path) -> str | None:
     return None
 
 
+def _download_ffmpeg_macos(ffmpeg_dir: Path, url_config: dict) -> bool:
+    """Download FFmpeg and FFprobe for macOS from evermeet.cx."""
+    import requests
+
+    print(f"\n{Fore.YELLOW}Downloading FFmpeg for macOS...{Style.RESET_ALL}")
+    
+    try:
+        # Download ffmpeg
+        print(f"{Fore.CYAN}Downloading ffmpeg...{Style.RESET_ALL}")
+        log_info(f"Downloading ffmpeg from {url_config['ffmpeg']}")
+        response = requests.get(url_config["ffmpeg"], stream=True, timeout=300)
+        response.raise_for_status()
+
+        total_size = int(response.headers.get("content-length", 0))
+        downloaded = 0
+
+        ffmpeg_zip = ffmpeg_dir / "ffmpeg.zip"
+        with open(ffmpeg_zip, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    if total_size > 0:
+                        percent = int(downloaded * 100 / total_size)
+                        bar_length = 30
+                        filled = int(bar_length * downloaded / total_size)
+                        bar = "=" * filled + "-" * (bar_length - filled)
+                        print(f"\r[{bar}] {percent}%", end="", flush=True)
+
+        print()  # New line after progress
+
+        # Extract ffmpeg
+        with zipfile.ZipFile(ffmpeg_zip, "r") as zf:
+            # The zip may contain the binary directly or in a subdirectory
+            for name in zf.namelist():
+                # Look for ffmpeg binary (not a directory)
+                if (name.endswith("/ffmpeg") or name == "ffmpeg") and not name.endswith("/"):
+                    source = zf.open(name)
+                    target = ffmpeg_dir / "ffmpeg"
+                    with open(target, "wb") as f:
+                        f.write(source.read())
+                    os.chmod(target, 0o755)
+                    break
+
+        ffmpeg_zip.unlink()
+
+        # Download ffprobe
+        print(f"{Fore.CYAN}Downloading ffprobe...{Style.RESET_ALL}")
+        log_info(f"Downloading ffprobe from {url_config['ffprobe']}")
+        response = requests.get(url_config["ffprobe"], stream=True, timeout=300)
+        response.raise_for_status()
+
+        total_size = int(response.headers.get("content-length", 0))
+        downloaded = 0
+
+        ffprobe_zip = ffmpeg_dir / "ffprobe.zip"
+        with open(ffprobe_zip, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    if total_size > 0:
+                        percent = int(downloaded * 100 / total_size)
+                        bar_length = 30
+                        filled = int(bar_length * downloaded / total_size)
+                        bar = "=" * filled + "-" * (bar_length - filled)
+                        print(f"\r[{bar}] {percent}%", end="", flush=True)
+
+        print()  # New line after progress
+
+        # Extract ffprobe
+        with zipfile.ZipFile(ffprobe_zip, "r") as zf:
+            # The zip may contain the binary directly or in a subdirectory
+            for name in zf.namelist():
+                # Look for ffprobe binary (not a directory)
+                if (name.endswith("/ffprobe") or name == "ffprobe") and not name.endswith("/"):
+                    source = zf.open(name)
+                    target = ffmpeg_dir / "ffprobe"
+                    with open(target, "wb") as f:
+                        f.write(source.read())
+                    os.chmod(target, 0o755)
+                    break
+
+        ffprobe_zip.unlink()
+
+        log_info("FFmpeg and FFprobe extracted successfully")
+        print(f"{Fore.GREEN}FFmpeg installed successfully!{Style.RESET_ALL}")
+        return True
+
+    except requests.RequestException as e:
+        log_error(f"Failed to download FFmpeg: {e}")
+        print(f"{Fore.RED}Failed to download FFmpeg: {e}{Style.RESET_ALL}")
+        return False
+    except (zipfile.BadZipFile, zipfile.LargeZipFile) as e:
+        log_error(f"Failed to extract FFmpeg: {e}")
+        print(f"{Fore.RED}Failed to extract FFmpeg: {e}{Style.RESET_ALL}")
+        return False
+    except Exception as e:
+        log_error(f"Unexpected error during FFmpeg setup: {e}")
+        print(f"{Fore.RED}Unexpected error: {e}{Style.RESET_ALL}")
+        return False
+
+
 def download_ffmpeg(base_dir: Path) -> bool:
     """Download and extract FFmpeg to the local ffmpeg directory."""
     import requests
@@ -68,14 +178,20 @@ def download_ffmpeg(base_dir: Path) -> bool:
         log_error("Unsupported operating system for auto-download")
         return False
 
-    url = FFMPEG_URLS.get(os_type)
-    if not url:
+    url_config = FFMPEG_URLS.get(os_type)
+    if not url_config:
         log_error(f"No download URL for {os_type}")
         return False
 
     ffmpeg_dir = base_dir / "ffmpeg"
     ffmpeg_dir.mkdir(parents=True, exist_ok=True)
 
+    # macOS requires downloading ffmpeg and ffprobe separately
+    if os_type == "darwin":
+        return _download_ffmpeg_macos(ffmpeg_dir, url_config)
+
+    # Windows and Linux use single archive
+    url = url_config
     print(f"\n{Fore.YELLOW}Downloading FFmpeg...{Style.RESET_ALL}")
     log_info(f"Downloading FFmpeg from {url}")
 

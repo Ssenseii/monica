@@ -16,13 +16,13 @@ A simple, keyboard-driven interactive CLI application that makes FFmpeg easy to 
 
 ## Supported Operations
 
-| Category | Description |
-|----------|-------------|
-| **Convert Video** | MP4, MKV, WebM, AVI with various codecs (H.264, H.265, VP9) |
-| **Convert Audio** | MP3, AAC, FLAC, WAV, OGG, Opus |
-| **Extract Audio** | Extract audio tracks from video files |
+| Category            | Description                                                       |
+| ------------------- | ----------------------------------------------------------------- |
+| **Convert Video**   | MP4, MKV, WebM, AVI with various codecs (H.264, H.265, VP9)       |
+| **Convert Audio**   | MP3, AAC, FLAC, WAV, OGG, Opus                                    |
+| **Extract Audio**   | Extract audio tracks from video files                             |
 | **Resize/Compress** | Scale to 1080p, 720p, 480p, 360p or compress with quality presets |
-| **Remux** | Change container format without re-encoding |
+| **Remux**           | Change container format without re-encoding                       |
 
 ## Installation
 
@@ -39,27 +39,47 @@ A simple, keyboard-driven interactive CLI application that makes FFmpeg easy to 
    cd monica
    ```
 
-2. Install dependencies:
+2. Create and activate virtual environment:
+   ```bash
+   # Create virtual environment
+   python3 -m venv venv
+   
+   # Activate virtual environment
+   # On macOS/Linux:
+   source venv/bin/activate
+   # On Windows:
+   venv\Scripts\activate
+   ```
+
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Run the application:
+4. Run the application:
    ```bash
    python main.py
    ```
+   
+   **Note:** Make sure the virtual environment is activated before running the application. You should see `(venv)` in your terminal prompt.
 
 On first run, MONICA will check for FFmpeg and offer to download it automatically if not found.
 
 ## Usage
 
 1. Place your input files in the `/import` folder
-2. Run `python main.py`
-3. Use arrow keys to navigate the menu
-4. Select an operation (e.g., "Convert video")
-5. Choose a preset (e.g., "MP4 (H.264)")
-6. Select files to process using Space, then press Enter
-7. Converted files appear in the `/export` folder
+2. Activate virtual environment (if not already activated):
+   ```bash
+   source venv/bin/activate  # macOS/Linux
+   # or
+   venv\Scripts\activate      # Windows
+   ```
+3. Run `python main.py`
+4. Use arrow keys to navigate the menu
+5. Select an operation (e.g., "Convert video")
+6. Choose a preset (e.g., "MP4 (H.264)")
+7. Select files to process using Space, then press Enter
+8. Converted files appear in the `/export` folder
 
 ### Output Naming
 

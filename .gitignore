@@ -56,3 +56,4 @@ logs/monica.log
 .coverage
 htmlcov/
 *.pytest_cache
+logs/monica.log
