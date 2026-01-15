@@ -1,0 +1,30 @@
+[project]
+name = "monica"
+version = "1.0.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Tory Clasen", email = "ToryClasen@Gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "colorama>=0.4.6",
+    "questionary>=2.0.0",
+    "requests>=2.28.0",
+]
+
+[dependency-groups]
+dev = [
+    "freezegun>=1.2.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "responses>=0.22.0",
+]
+
+[project.scripts]
+monica = "monica.main:main"
+
+[build-system]
+requires = ["uv_build>=0.9.25,<0.10.0"]
+build-backend = "uv_build"

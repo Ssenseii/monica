@@ -10,7 +10,7 @@ import tarfile
 from pathlib import Path
 from colorama import Fore, Style
 
-from .logger import log_info, log_error, log_warning
+from monica.logger import log_info, log_error, log_warning
 
 
 # FFmpeg download URLs

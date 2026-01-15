@@ -4,10 +4,7 @@ import pytest
 from pathlib import Path
 import sys
 
-# Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from src.recipes import Recipe
+from monica.recipes import Recipe
 
 
 @pytest.fixture

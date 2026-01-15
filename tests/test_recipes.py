@@ -1,10 +1,10 @@
-"""Tests for src/recipes.py"""
+"""Tests for src/monica/recipes.py"""
 
 import pytest
 import json
 from pathlib import Path
 
-from src.recipes import (
+from monica.recipes import (
     Recipe,
     get_recipes_by_category,
     get_all_recipes,

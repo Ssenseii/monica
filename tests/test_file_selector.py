@@ -1,9 +1,9 @@
-"""Tests for src/file_selector.py"""
+"""Tests for src/monica/file_selector.py"""
 
 import pytest
 from pathlib import Path
 
-from src.file_selector import (
+from monica.file_selector import (
     format_size,
     get_files_in_directory,
 )

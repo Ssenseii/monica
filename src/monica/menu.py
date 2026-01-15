@@ -4,14 +4,14 @@ from pathlib import Path
 import questionary
 from colorama import Fore, Style
 
-from .recipes import (
+from monica.recipes import (
     Recipe,
     get_recipes_by_category,
     get_input_extensions_for_category
 )
-from .file_selector import select_files, display_selected_files
-from .executor import execute_jobs
-from .ffmpeg_manager import print_ffmpeg_status
+from monica.file_selector import select_files, display_selected_files
+from monica.executor import execute_jobs
+from monica.ffmpeg_manager import print_ffmpeg_status
 
 
 # Main menu options

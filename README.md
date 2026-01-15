@@ -26,35 +26,49 @@ A simple, keyboard-driven interactive CLI application that makes FFmpeg easy to 
 
 ## Installation
 
+On first run, MONICA will check for FFmpeg and offer to download it automatically if not found.
+
 ### Prerequisites
 
 - Python 3.10 or higher
+- uv (optional)
 - FFmpeg (auto-downloaded if not present)
 
-### Steps
+### Method 1: Using uv or pip
+
+```bash
+uv tool install git+https://github.com/tclasen/monica
+```
+
+or
+
+```bash
+pip install git+https://github.com/tclasen/monica
+```
+
+### Method 2: Local git clone and install (development mode)
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/monica.git
+   git clone https://github.com/tclasen/monica.git
    cd monica
    ```
 
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   uv sync
    ```
 
-3. Run the application:
+   or
+
    ```bash
-   python main.py
+   pip install -e .
    ```
-
-On first run, MONICA will check for FFmpeg and offer to download it automatically if not found.
 
 ## Usage
 
 1. Place your input files in the `/import` folder
-2. Run `python main.py`
+2. Run `monica`
 3. Use arrow keys to navigate the menu
 4. Select an operation (e.g., "Convert video")
 5. Choose a preset (e.g., "MP4 (H.264)")
@@ -73,25 +87,33 @@ Example: `video_20260108_143210_MP4_converted.mp4`
 ## Project Structure
 
 ```
-monica/
-├── main.py              # Entry point
-├── requirements.txt     # Python dependencies
 ├── README.md           # This file
-├── import/             # Input files go here
-├── export/             # Output files appear here
-├── logs/               # Log files
 ├── docs/               # Documentation
 │   ├── introduction.md # Project specification
 │   ├── usage.md        # User guide
 │   └── recipes.md      # Recipe documentation
-└── src/
-    ├── __init__.py
-    ├── ffmpeg_manager.py   # FFmpeg detection/download
-    ├── menu.py             # Interactive menus
-    ├── recipes.py          # Conversion presets
-    ├── file_selector.py    # File picker
-    ├── executor.py         # Job execution
-    └── logger.py           # Logging
+├── logs/               # Log files
+├── src
+│   └── monica
+│       ├── __init__.py
+│       ├── executor.py         # Job execution
+│       ├── ffmpeg_manager.py   # FFmpeg detection/download
+│       ├── file_selector.py    # File picker
+│       ├── logger.py           # Logging
+│       ├── main.py             # Entry point
+│       ├── menu.py             # Interactive menus
+│       └── recipes.py          # Conversion presets
+├── tests
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── test_executor.py
+│   ├── test_ffmpeg_manager.py
+│   ├── test_file_selector.py
+│   ├── test_logger.py
+│   ├── test_main.py
+│   └── test_recipes.py
+├── pyproject.toml      # Project Metadata
+└── uv.lock             # Dependency lock file
 ```
 
 ## Configuration

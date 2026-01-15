@@ -1,19 +1,19 @@
-"""Tests for src/logger.py"""
+"""Tests for src/monica/logger.py"""
 
 import pytest
 from pathlib import Path
 
-from src.logger import MonicaLogger, get_logger
+from monica.logger import MonicaLogger, get_logger
 
 
 # Reset the global logger between tests
 @pytest.fixture(autouse=True)
 def reset_logger():
     """Reset the global logger instance between tests."""
-    import src.logger
-    src.logger._logger = None
+    import monica.logger
+    monica.logger._logger = None
     yield
-    src.logger._logger = None
+    monica.logger._logger = None
 
 
 def flush_logger(logger):

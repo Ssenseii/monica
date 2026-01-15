@@ -11,9 +11,9 @@ from pathlib import Path
 from colorama import init, Fore, Style
 init()
 
-from src.ffmpeg_manager import ensure_ffmpeg
-from src.logger import get_logger
-from src.menu import run_menu_loop
+from monica.ffmpeg_manager import ensure_ffmpeg
+from monica.logger import get_logger
+from monica.menu import run_menu_loop
 
 
 def setup_directories(base_dir: Path) -> tuple[Path, Path, Path]:
@@ -37,7 +37,7 @@ def setup_directories(base_dir: Path) -> tuple[Path, Path, Path]:
 
 def main() -> int:
     """Main entry point."""
-    base_dir = Path(__file__).parent.resolve()
+    base_dir = Path().resolve()
 
     # Setup directories
     import_dir, export_dir, logs_dir = setup_directories(base_dir)

@@ -9,8 +9,8 @@ from datetime import datetime
 from pathlib import Path
 from colorama import Fore, Style
 
-from .recipes import Recipe
-from .logger import get_logger
+from monica.recipes import Recipe
+from monica.logger import get_logger
 
 
 # Spinner animation frames

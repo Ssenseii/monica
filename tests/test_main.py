@@ -4,7 +4,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock
 
-from main import setup_directories, main
+from monica.main import setup_directories, main
 
 
 class TestSetupDirectories:

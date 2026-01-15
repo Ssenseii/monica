@@ -1,4 +1,4 @@
-"""Tests for src/executor.py"""
+"""Tests for src/monica/executor.py"""
 
 import pytest
 from pathlib import Path
@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch, MagicMock
 import time
 import threading
 
-from src.executor import (
+from monica.executor import (
     parse_duration,
     parse_time,
     format_time,
@@ -15,7 +15,7 @@ from src.executor import (
     display_progress_bar,
     ProgressIndicator,
 )
-from src.recipes import Recipe
+from monica.recipes import Recipe
 
 
 class TestParseDuration:
